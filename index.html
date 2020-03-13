@@ -53,7 +53,7 @@
           })
         }
 
-        var jsondata = new Array();
+        var geojsondata = new Object();
 
         //Fetch JSON object and convert it to an array
         const apiResponse = fetch(
@@ -61,11 +61,27 @@
         ).then(res => {
           return res.json()
         }).then(data => {
-          // console.log(data.parameters.dataset)
+
           let dataset = data.parameters.dataset
-          console.log(dataset)
+          // console.log(dataset)
           let records = data.records
-          console.log(records[1].fields.geom)
+          // console.log("records" + records)
+          for(let i = 0; i < records.length; i++) {
+            // console.log(records[i].fields)
+            geojsondata["type"] = "Feature"
+            geojsondata["geometry"] = {}
+
+            geojsondata["geometry"]["type"] = records[i].fields.geom.type
+            let coordinates = records[i].fields.geom.coordinates
+
+            geojsondata["geometry"]["coordinates"] = coordinates
+            // console.log("GEOJSON: " + geojsondata)
+            for(let j = 0; j < coordinates.length; j++) {
+              console.log("coordinates: " + coordinates[j])
+            }
+          }
+          // console.log(records[1].fields)
+          // jsondata["type"] = 
         })
         // .then (data => {
         //   let records = data.records
@@ -73,11 +89,7 @@
         //   jsondata.push(records)
         // })
 
-        // console.log(jsondata)
-        
-
-        
-
+        console.log(geojsondata.geometry.coordinates)
 
 
         var trafficLayer = new google.maps.TrafficLayer();
